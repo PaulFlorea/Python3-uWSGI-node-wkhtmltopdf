@@ -1,10 +1,12 @@
 FROM paulflorea/python3-uwsgi-node:alpine
 
-
-# Download and install wkhtmltopdf
-RUN echo 'http://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories; apk upgrade --update-cache --available
-RUN apk add --update postgresql-dev wkhtmltopdf coreutils xvfb dbus
-
+# Install the required libraries for wkhtmltopdf
+RUN apk update && apk upgrade && apk add --no-cache --update \
+        wkhtmltopdf@edge-testing \
+        coreutils \
+        xvfb \
+        dbus \
+        && rm -rf /var/cache/apk/* # Delete the cache folder to save some space
 
 # Install xvfb to use wkhtmltopdf without X server
 ADD ./packages/wkhtmltopdf /usr/local/bin/
